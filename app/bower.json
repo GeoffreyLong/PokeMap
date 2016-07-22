@@ -1,0 +1,24 @@
+{
+  "name": "pokeApp",
+  "homepage": "https://github.com/GeoffreyLong/PokeMap",
+  "authors": [
+    "Geoffrey Long <Geoffrey.Long@mail.mcgill.ca>"
+  ],
+  "description": "Pokemon Map",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-aria": "^1.5.8",
+    "angular-material": "^1.0.9",
+    "jquery": "^3.1.0",
+    "ngmap": "^1.17.3"
+  }
+}
