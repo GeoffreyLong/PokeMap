@@ -1,19 +1,31 @@
+
 angular.module('pokeMap').component('pokeMap', {
   templateUrl: 'poke-map/poke-map.template.html',
-  controller: function PokeMapController($scope, $http){
+  controller: function PokeMapController($scope, $http, $interval,
+                                          $mdMedia, $mdDialog){
     // Call pokemon api with the coordinates
-    setInterval(function(){
-      if ($scope.lat && $scope.lon){
+    var queryPoke = $interval(function(){
+      if ($scope.lat && $scope.lon && $scope.user){
+        var data = {};
+        data.lat = $scope.lat;
+        data.lon = $scope.lon;
+        data.username = $scope.user.name;
+        data.password = $scope.user.password;
+
         $http({
-          method: 'GET',
-          url: 'api/pokemon'
+          method: 'POST',
+          url: 'api/pokemon',
+          data: data
         }).then(function(data) {
           console.log(data);
         }, function(err) {
           console.log(err);
         });
       }
-    }, 1000);
+    }, 2000);
+    if ($scope.queryComplete){
+      $interval.cancel(queryPoke);
+    }
 
     var getLocation = function() {
       // TODO should this be in a promise?
@@ -52,7 +64,44 @@ angular.module('pokeMap').component('pokeMap', {
         console.log("Geolocation is not supported by this browser.");
       }
     }
-
     getLocation();
+
+
+    var showLogin = function() {
+      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+      $mdDialog.show({
+        controller: function DialogController($scope, $mdDialog){
+          $scope.user = {};
+          $scope.hide = function() {
+            $mdDialog.hide();
+          };
+          $scope.cancel = function() {
+            $mdDialog.cancel();
+          };
+          $scope.answer = function(answer) {
+            $mdDialog.hide(answer);
+          };
+        },
+        templateUrl: 'poke-map/user-dialog.template.html',
+        parent: angular.element(document.body),
+        clickOutsideToClose: false,
+        escToClose: false,
+        fullscreen: useFullScreen
+      })
+      .then(function(answer) {
+        $scope.user = {};
+        $scope.user.name = answer.name;
+        $scope.user.password = answer.password;
+      }, function() {
+        // TODO errors
+      });
+      $scope.$watch(function() {
+        return $mdMedia('xs') || $mdMedia('sm');
+      }, function(wantsFullScreen) {
+        $scope.customFullscreen = (wantsFullScreen === true);
+      });
+    }
+    if (!$scope.user) showLogin(); 
+
   }
 });
