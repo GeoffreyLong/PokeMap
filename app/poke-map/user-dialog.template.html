@@ -1,38 +1,51 @@
 <md-dialog id="User Information" ng-cloak>
   <md-toolbar>
     <div class="md-toolbar-tools">
-      <h2>Cart</h2>
-      <span flex></span>
-      <md-button class="md-icon-button" ng-click="cancel()">
-        <md-icon class="material-icons"> close </md-icon>
-      </md-button>
+      <h2>User Information</h2>
     </div>
   </md-toolbar>
   <md-dialog-content>
     <div id="steps" style="padding: 20px">
-      Step 1: Get a pokemon club account (I recommend a throw-away account
-              with a dummy password since I put minimal security in this app)
-      <br>
-      Step 2: Enter your credentials below
-      <br>
-      Step 3: Browse Pokemon in your area!
+      <div layout="row">
+        <div> <b> Step 1: </b> </div>
+        <div flex style="padding-left: 5px; max-width: 400px">
+          Get a pokemon club account 
+          I recommend a throw-away account
+          with a dummy password since I put minimal security in this app
+        </div>
+      </div>
+      <div layout="row">
+        <div> <b> Step 2: </b> </div>
+        <div flex style="padding-left: 5px">
+          Enter your pokemon club login below
+        </div>
+      </div>
+      <div layout="row">
+        <div> <b> Step 3: </b> </div>
+        <div flex style="padding-left: 5px">
+          Browse Pokemon in your area!
+        </div>
+      </div>
     </div>
 
-    <div style="width: 60%; margin: auto">
-      <md-input-container class="md-block" style="margin:0">
-        <label class="md-title"> Username </label>
-        <input  type="text" name="userName" ng-model="user.name" />
-      </md-input-container>
-      <md-input-container class="md-block" style="margin:0">
-        <label class="md-title"> Password </label>
-        <input  type="password" name="userPassword" ng-model="user.password" />
-      </md-input-container>
+    <div style="width: 90%; margin: auto">
+      <!-- TODO make this submit work on enter -->
+      <form ng-submit="answer()">
+        <md-input-container flex style="margin:0">
+          <label class="md-title"> Username </label>
+          <input  type="text" name="userName" ng-model="user.name" />
+        </md-input-container>
+        <md-input-container flex style="margin:0">
+          <label class="md-title"> Password </label>
+          <input  type="password" name="userPassword" ng-model="user.password" />
+        </md-input-container>
+      </form>
     </div>
   </md-dialog-content>
 
   <md-dialog-actions layout="row" layout-align="end center">
     <!-- Could add a clear cart button here -->
-    <md-button ng-click="answer(user)" style="margin-right:20px; padding-left:20px">
+    <md-button ng-click="answer()" style="margin-right:20px; padding-left:20px">
       Enter
     </md-button>
   </md-dialog-actions>

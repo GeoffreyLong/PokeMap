@@ -86,7 +86,7 @@ angular.module('pokeMap').component('pokeMap', {
     getLocation();
 
 
-    var showLogin = function() {
+    $scope.showLogin = function() {
       var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
       $mdDialog.show({
         controller: function DialogController($scope, $mdDialog){
@@ -97,8 +97,8 @@ angular.module('pokeMap').component('pokeMap', {
           $scope.cancel = function() {
             $mdDialog.cancel();
           };
-          $scope.answer = function(answer) {
-            $mdDialog.hide(answer);
+          $scope.answer = function() {
+            $mdDialog.hide($scope.user);
           };
         },
         templateUrl: 'poke-map/user-dialog.template.html',
@@ -120,7 +120,7 @@ angular.module('pokeMap').component('pokeMap', {
         $scope.customFullscreen = (wantsFullScreen === true);
       });
     }
-    if (!$scope.user) showLogin(); 
+    if (!$scope.user) $scope.showLogin(); 
 
   }
 });

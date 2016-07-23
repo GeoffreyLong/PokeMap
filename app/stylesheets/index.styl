@@ -1,8 +1,24 @@
 html, body
   height: 100%
   width: 100%
+  min-height: 300px
+  min-width: 300px
 
+/* Padding for the main content */
+#topMenu
+  width: 100%
+  height: 15%
+
+
+md-toolbar
+  .md-input-focused
+    label
+      /* Override blending */
+      color: rgba(0,0,0,0.38) !important
 
 ng-map
   min-height: 300px
   min-width: 300px
+  height: 80vh
+  width: 80vw
+  margin: auto

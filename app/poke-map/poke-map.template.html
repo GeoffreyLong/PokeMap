@@ -1,3 +1,24 @@
+<div id="topMenu"> </div>
+<md-toolbar id="topBar" layout="row" layout-align="space-between center" class="md-whiteframe-z2" 
+            style="padding:0px; margin-bottom:0px; position:fixed; top: 0px">
+  <div class="md-title" style="padding-left: 20px"> PokeFinder </div>
+  <div layout="row" style="margin-bottom: -40px">
+    <md-input-container class="md-block" style="margin:0">
+      <label class="md-title"> Latitude </label>
+      <input  type="text" name="userName" ng-model="lat" />
+    </md-input-container>
+    <md-input-container class="md-block" style="margin:0">
+      <label class="md-title"> Longitude </label>
+      <input  type="text" name="userName" ng-model="lon" />
+    </md-input-container>
+  </div>
+  <div>
+    <md-button aria-label="Profile">
+      <md-icon class="material-icons" ng-click="showLogin()"> account_circle </md-icon>
+    </md-button>
+  </div>
+</md-toolbar>
+
 <ng-map center="{{lat}}, {{lon}}" zoom="16">
   <marker position="{{lat}}, {{lon}}" title="Current Location"></marker> 
   <custom-marker ng-repeat="cm in pokeMarks" position="{{cm.coords}}">
