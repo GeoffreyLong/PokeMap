@@ -9,12 +9,13 @@ router.post('/api/pokemon', function(req, res) {
     console.log("processing");
   }
   else {
-require("child_process").exec('python ../PokeQuery/example.py -u ' + req.body.username
+    process = true;
+    console.log("ok");
+require("child_process").exec('cd PokeQuery; python example.py -u ' + req.body.username
                               + ' -p ' + req.body.password + ' --lat ' + req.body.lat
-                              + ' --lon ' + req.body.lon + ' -st 10',
+                              + ' --lon ' + req.body.lon + ' -st 1',
   function (error, stdout, stderr) {
     console.log('stdout: ' + stdout);
-    console.log('stderr: ' + stderr);
     if (error !== null) {
       console.log('exec error: ' + error);
     }

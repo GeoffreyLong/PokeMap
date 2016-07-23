@@ -54,7 +54,7 @@ SESSION.verify = False
 global_password = None
 global_token = None
 access_token = None
-DEBUG = True
+DEBUG = False
 VERBOSE_DEBUG = False  # if you want to write raw request/response to the console
 COORDS_LATITUDE = 0
 COORDS_LONGITUDE = 0
@@ -281,7 +281,7 @@ def get_profile(service, access_token, api, useauth, *reqq):
     return retrying_api_req(service, api, access_token, req, useauth=useauth)
 
 def login_google(username, password):
-    print '[!] Google login for: {}'.format(username)
+    if (DEBUG): print '[!] Google login for: {}'.format(username)
     r1 = perform_master_login(username, password, ANDROID_ID)
     r2 = perform_oauth(username,
                        r1.get('Token', ''),
@@ -292,7 +292,7 @@ def login_google(username, password):
     return r2.get('Auth')
 
 def login_ptc(username, password):
-    print '[!] PTC login for: {}'.format(username)
+    if (DEBUG): print '[!] PTC login for: {}'.format(username)
     head = {'User-Agent': 'Niantic App'}
     r = SESSION.get(LOGIN_URL, headers=head)
     if r is None:
@@ -307,7 +307,7 @@ def login_ptc(username, password):
     # Maximum password length is 15 (sign in page enforces this limit, API does not)
 
     if len(password) > 15:
-        print '[!] Trimming password to 15 characters'
+        if (DEBUG): print '[!] Trimming password to 15 characters'
         password = password[:15]
 
     data = {
@@ -469,7 +469,7 @@ def get_args():
     	default=False)
     parser.add_argument(
         '-d', '--debug', help='Debug Mode', action='store_true')
-    parser.set_defaults(DEBUG=True)
+    parser.set_defaults(DEBUG=False)
     return parser.parse_args()
 
 @memoize
@@ -485,39 +485,39 @@ def login(args):
     if access_token is None:
         raise Exception('[-] Wrong username/password')
 
-    print '[+] RPC Session Token: {} ...'.format(access_token[:25])
+    if (DEBUG): print '[+] RPC Session Token: {} ...'.format(access_token[:25])
 
     api_endpoint = get_api_endpoint(args.auth_service, access_token)
     if api_endpoint is None:
         raise Exception('[-] RPC server offline')
 
-    print '[+] Received API endpoint: {}'.format(api_endpoint)
+    if (DEBUG): print '[+] Received API endpoint: {}'.format(api_endpoint)
 
     profile_response = retrying_get_profile(args.auth_service, access_token,
                                             api_endpoint, None)
     if profile_response is None or not profile_response.payload:
         raise Exception('Could not get profile')
 
-    print '[+] Login successful'
+    if (DEBUG): print '[+] Login successful'
 
     payload = profile_response.payload[0]
     profile = pokemon_pb2.ResponseEnvelop.ProfilePayload()
     profile.ParseFromString(payload)
-    print '[+] Username: {}'.format(profile.profile.username)
+    if (DEBUG): print '[+] Username: {}'.format(profile.profile.username)
 
     creation_time = \
         datetime.fromtimestamp(int(profile.profile.creation_time)
                                / 1000)
-    print '[+] You started playing Pokemon Go on: {}'.format(
+    if (DEBUG): print '[+] You started playing Pokemon Go on: {}'.format(
         creation_time.strftime('%Y-%m-%d %H:%M:%S'))
 
     for curr in profile.profile.currency:
-        print '[+] {}: {}'.format(curr.type, curr.amount)
+        if (DEBUG): print '[+] {}: {}'.format(curr.type, curr.amount)
 
     return api_endpoint, access_token, profile_response
 
 def main():
-    print args
+    if (DEBUG): print args
     origin_lat = args.lat 
     origin_lon = args.lon
     steplimit = 3
@@ -531,6 +531,7 @@ def main():
     dx = 0
     dy = -1
     steplimit2 = steplimit**2
+    the_pokes = None
     for step in range(steplimit2):
         #starting at 0 index
         debug('looping: step {} of {}'.format((step+1), steplimit**2))
@@ -543,10 +544,13 @@ def main():
 
         (x, y) = (x + dx, y + dy)
 
-        print process_step(args, api_endpoint, access_token, profile_response)
+        the_pokes = process_step(args, api_endpoint, access_token, profile_response)
 
-        print('Completed: ' + str(
-            ((step+1) + pos * .25 - .25) / (steplimit2) * 100) + '%')
+        if (DEBUG): print('Completed: ' + str(((step+1) + pos * .25 - .25) / (steplimit2) * 100) + '%')
+
+    print the_pokes
+    sys.stdout.flush()
+
 
 
 def process_step(args, api_endpoint, access_token, profile_response):
@@ -557,7 +561,7 @@ def process_step(args, api_endpoint, access_token, profile_response):
     pokemonsJSON = json.load(
         open(path + '/locales/pokemon.' + args.locale + '.json'))
 
-    print('[+] Searching for Pokemon at location {} {}'.format(FLOAT_LAT, FLOAT_LONG))
+    if (DEBUG): print('[+] Searching for Pokemon at location {} {}'.format(FLOAT_LAT, FLOAT_LONG))
     origin = LatLng.from_degrees(FLOAT_LAT, FLOAT_LONG)
     step_lat = FLOAT_LAT
     step_long = FLOAT_LONG
@@ -609,7 +613,6 @@ transform_from_wgs_to_gcj(Location(Fort.Latitude, Fort.Longitude))
             break
 
     for poke in visible:
-        print poke
         pokeid = str(poke.pokemon.PokemonId)
         pokename = pokemonsJSON[pokeid]
         if args.ignore:
@@ -639,8 +642,7 @@ transform_from_wgs_to_gcj(Location(Fort.Latitude, Fort.Longitude))
     with open('data.txt', 'w') as outfile:
         json.dump(pokemons, outfile)
     '''
-    print pokemons
-    sys.stdout.flush()
+    return pokemons
 
 def clear_stale_pokemons():
     current_time = time.time()
@@ -839,7 +841,6 @@ def get_map():
 
 
 if __name__ == '__main__':
-    print "ok"
     sys.stdout.flush()
     args = get_args()
     '''

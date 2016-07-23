@@ -22,7 +22,7 @@ angular.module('pokeMap').component('pokeMap', {
           console.log(err);
         });
       }
-    }, 2000);
+    }, 20000);
     if ($scope.queryComplete){
       $interval.cancel(queryPoke);
     }
