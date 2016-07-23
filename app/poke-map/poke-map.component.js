@@ -1,8 +1,15 @@
-
 angular.module('pokeMap').component('pokeMap', {
   templateUrl: 'poke-map/poke-map.template.html',
   controller: function PokeMapController($scope, $http, $interval,
-                                          $mdMedia, $mdDialog){
+                                          $mdMedia, $mdDialog, NgMap){
+    $scope.pokeMarks = [];
+
+    // Callback to set the map after map initializes
+    NgMap.getMap().then(function(map) {
+      $scope.map = map;
+    });
+
+
     // Call pokemon api with the coordinates
     var queryPoke = $interval(function(){
       if ($scope.lat && $scope.lon && $scope.user){
@@ -19,9 +26,15 @@ angular.module('pokeMap').component('pokeMap', {
         }).then(function(data) {
           console.log(data);
           // Populate the map!
-          data.forEach(function(poke){
-            
-          })
+          
+          for (poke in data.data) {
+            var poke = data.data[poke];
+            var newMark = {};
+            newMark.pokemon = poke.name;
+            newMark.pokeNum = poke.id;
+            newMark.coords = poke.lat + ',' + poke.lng;
+            $scope.pokeMarks.push(newMark);
+          }
         }, function(err) {
           console.log(err);
         });

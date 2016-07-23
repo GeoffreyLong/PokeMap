@@ -1,1 +1,7 @@
-Hello World
+<ng-map center="{{lat}}, {{lon}}" zoom="16">
+  <marker position="{{lat}}, {{lon}}" title="Current Location"></marker> 
+  <custom-marker ng-repeat="cm in pokeMarks" position="{{cm.coords}}">
+    <div> <img ng-src="images/{{cm.pokeNum}}.png"/> </div>
+  </custom-marker> 
+</ng-map>
+
