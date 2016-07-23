@@ -18,12 +18,18 @@ angular.module('pokeMap').component('pokeMap', {
           data: data
         }).then(function(data) {
           console.log(data);
+          // Populate the map!
+          data.forEach(function(poke){
+            
+          })
         }, function(err) {
           console.log(err);
         });
+        
+        cancelTimer();
       }
-    }, 20000);
-    if ($scope.queryComplete){
+    }, 1000);
+    var cancelTimer = function(){
       $interval.cancel(queryPoke);
     }
 
@@ -85,7 +91,7 @@ angular.module('pokeMap').component('pokeMap', {
         templateUrl: 'poke-map/user-dialog.template.html',
         parent: angular.element(document.body),
         clickOutsideToClose: false,
-        escToClose: false,
+        escapeToClose: false,
         fullscreen: useFullScreen
       })
       .then(function(answer) {

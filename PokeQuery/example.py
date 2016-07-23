@@ -548,7 +548,7 @@ def main():
 
         if (DEBUG): print('Completed: ' + str(((step+1) + pos * .25 - .25) / (steplimit2) * 100) + '%')
 
-    print the_pokes
+    print json.dumps(the_pokes)
     sys.stdout.flush()
 
 
