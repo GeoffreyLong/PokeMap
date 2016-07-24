@@ -19,8 +19,8 @@ angular.module('pokeMap').component('pokeMap', {
     $scope.query = function(){
       $scope.isBusy = true;
       var data = {};
-      data.lat = $scope.lat;
-      data.lon = $scope.lon;
+      data.lat = $scope.user.lat;
+      data.lon = $scope.user.lon;
       data.username = $scope.user.name;
       data.password = $scope.user.password;
 
@@ -54,8 +54,8 @@ angular.module('pokeMap').component('pokeMap', {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position){
           console.log(position.coords);
-          $scope.lat = position.coords.latitude;
-          $scope.lon = position.coords.longitude;
+          $scope.user.lat = position.coords.latitude;
+          $scope.user.lon = position.coords.longitude;
         }, function(error) {
           switch(error.code) {
             case error.PERMISSION_DENIED:
@@ -113,6 +113,8 @@ angular.module('pokeMap').component('pokeMap', {
         $scope.user = {};
         $scope.user.name = answer.name;
         $scope.user.password = answer.password;
+        $scope.user.lat = answer.lat;
+        $scope.user.lon = answer.lon;
         $scope.refresh();
       }, function() {
         // TODO errors

@@ -31,14 +31,26 @@
     <div style="width: 90%; margin: auto">
       <!-- TODO make this submit work on enter -->
       <form ng-submit="answer()">
-        <md-input-container flex style="margin:0">
-          <label class="md-title"> Username </label>
-          <input  type="text" name="userName" ng-model="user.name" />
-        </md-input-container>
-        <md-input-container flex style="margin:0">
-          <label class="md-title"> Password </label>
-          <input  type="password" name="userPassword" ng-model="user.password" />
-        </md-input-container>
+        <div>
+          <md-input-container flex style="margin:0">
+            <label class="md-title"> Username </label>
+            <input  type="text" name="userName" ng-model="user.name" />
+          </md-input-container>
+          <md-input-container flex style="margin:0">
+            <label class="md-title"> Password </label>
+            <input  type="password" name="userPassword" ng-model="user.password" />
+          </md-input-container>
+        </div>
+        <div>
+          <md-input-container flex style="margin:0">
+            <label class="md-title"> Latitude </label>
+            <input  type="text" name="latitude" ng-model="user.lat" />
+          </md-input-container>
+          <md-input-container flex style="margin:0">
+            <label class="md-title"> Longitude </label>
+            <input  type="text" name="longitude" ng-model="user.lon" />
+          </md-input-container>
+        </div>
       </form>
     </div>
   </md-dialog-content>
