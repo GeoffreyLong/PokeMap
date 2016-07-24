@@ -3,48 +3,49 @@ angular.module('pokeMap').component('pokeMap', {
   controller: function PokeMapController($scope, $http, $interval,
                                           $mdMedia, $mdDialog, NgMap){
     $scope.pokeMarks = [];
+    $scope.user = {};
+    $scope.isBusy = false;
 
     // Callback to set the map after map initializes
     NgMap.getMap().then(function(map) {
       $scope.map = map;
     });
 
-
-    // Call pokemon api with the coordinates
-    var queryPoke = $interval(function(){
-      if ($scope.lat && $scope.lon && $scope.user){
-        var data = {};
-        data.lat = $scope.lat;
-        data.lon = $scope.lon;
-        data.username = $scope.user.name;
-        data.password = $scope.user.password;
-
-        $http({
-          method: 'POST',
-          url: 'api/pokemon',
-          data: data
-        }).then(function(data) {
-          console.log(data);
-          // Populate the map!
-          
-          for (poke in data.data) {
-            var poke = data.data[poke];
-            var newMark = {};
-            newMark.pokemon = poke.name;
-            newMark.pokeNum = poke.id;
-            newMark.coords = poke.lat + ',' + poke.lng;
-            $scope.pokeMarks.push(newMark);
-          }
-        }, function(err) {
-          console.log(err);
-        });
-        
-        cancelTimer();
-      }
-    }, 1000);
-    var cancelTimer = function(){
-      $interval.cancel(queryPoke);
+    $scope.refresh = function(){
+      $scope.pokeMarks = [];
+      $scope.query();
     }
+
+    $scope.query = function(){
+      $scope.isBusy = true;
+      var data = {};
+      data.lat = $scope.lat;
+      data.lon = $scope.lon;
+      data.username = $scope.user.name;
+      data.password = $scope.user.password;
+
+      $http({
+        method: 'POST',
+        url: 'api/pokemon',
+        data: data
+      }).then(function(data) {
+        console.log(data);
+        // Populate the map!
+        
+        for (poke in data.data) {
+          var poke = data.data[poke];
+          var newMark = {};
+          newMark.pokemon = poke.name;
+          newMark.pokeNum = poke.id;
+          newMark.coords = poke.lat + ',' + poke.lng;
+          $scope.pokeMarks.push(newMark);
+          $scope.isBusy = false;
+        }
+      }, function(err) {
+        console.log(err);
+      });
+    }
+
 
     var getLocation = function() {
       // TODO should this be in a promise?
@@ -89,8 +90,8 @@ angular.module('pokeMap').component('pokeMap', {
     $scope.showLogin = function() {
       var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
       $mdDialog.show({
-        controller: function DialogController($scope, $mdDialog){
-          $scope.user = {};
+        controller: function DialogController($scope, $mdDialog, locals){
+          $scope.user = locals.user;
           $scope.hide = function() {
             $mdDialog.hide();
           };
@@ -105,12 +106,14 @@ angular.module('pokeMap').component('pokeMap', {
         parent: angular.element(document.body),
         clickOutsideToClose: false,
         escapeToClose: false,
+        locals: {user: $scope.user},
         fullscreen: useFullScreen
       })
       .then(function(answer) {
         $scope.user = {};
         $scope.user.name = answer.name;
         $scope.user.password = answer.password;
+        $scope.refresh();
       }, function() {
         // TODO errors
       });
@@ -120,7 +123,7 @@ angular.module('pokeMap').component('pokeMap', {
         $scope.customFullscreen = (wantsFullScreen === true);
       });
     }
-    if (!$scope.user) $scope.showLogin(); 
+    if (!$scope.user.name) $scope.showLogin(); 
 
   }
 });

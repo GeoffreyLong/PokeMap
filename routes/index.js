@@ -5,23 +5,17 @@ var process = null;
 
 /* GET home page. */
 router.post('/api/pokemon', function(req, res) {
-  if (process) {
-    console.log("processing");
-  }
-  else {
-    process = true;
-    console.log("ok");
-    require("child_process").exec('cd PokeQuery; python example.py -u ' + req.body.username
-                                  + ' -p ' + req.body.password + ' --lat ' + req.body.lat
-                                  + ' --lon ' + req.body.lon + ' -st 1',
-      function (error, stdout, stderr) {
-        console.log('stdout: ' + stdout);
-        
-        res.status(200).send(JSON.parse(stdout));
-        if (error !== null) {
-          console.log('exec error: ' + error);
-        }
-    });
+  require("child_process").exec('cd PokeQuery; python example.py -u ' + req.body.username
+                                + ' -p ' + req.body.password + ' --lat ' + req.body.lat
+                                + ' --lon ' + req.body.lon + ' -st 1',
+    function (error, stdout, stderr) {
+      console.log('stdout: ' + stdout);
+      
+      res.status(200).send(JSON.parse(stdout));
+      if (error !== null) {
+        console.log('exec error: ' + error);
+      }
+  });
 
 
 
@@ -38,7 +32,6 @@ router.post('/api/pokemon', function(req, res) {
       console.log(closed);
     });
     */
-  }
 
 });
 

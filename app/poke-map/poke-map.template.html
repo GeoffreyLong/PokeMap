@@ -11,6 +11,9 @@
       <label class="md-title"> Longitude </label>
       <input  type="text" name="userName" ng-model="lon" />
     </md-input-container>
+    <md-button aria-label="Refresh" style="margin-top: -10px; height: 40px">
+      <md-icon class="material-icons" ng-click="refresh()"> refresh </md-icon>
+    </md-button>
   </div>
   <div>
     <md-button aria-label="Profile">
@@ -19,10 +22,11 @@
   </div>
 </md-toolbar>
 
-<ng-map center="{{lat}}, {{lon}}" zoom="16">
+<ng-map ng-style="{'visibility': pokeMarks.length !== 0 ? 'visible':'hidden'}" center="{{lat}}, {{lon}}" zoom="16">
   <marker position="{{lat}}, {{lon}}" title="Current Location"></marker> 
   <custom-marker ng-repeat="cm in pokeMarks" position="{{cm.coords}}">
     <div> <img ng-src="images/{{cm.pokeNum}}.png"/> </div>
   </custom-marker> 
 </ng-map>
 
+<md-progress-circular ng-hide="pokeMarks.length !== 0 || !isBusy" md-diameter="96" style="position:fixed; top: 30%; left: 46%"></md-progress-circular>
