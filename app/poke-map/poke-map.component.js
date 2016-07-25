@@ -5,6 +5,7 @@ angular.module('pokeMap').component('pokeMap', {
     $scope.pokeMarks = [];
     $scope.user = {};
     $scope.isBusy = false;
+    $scope.addressFail = false;
 
     // Callback to set the map after map initializes
     NgMap.getMap().then(function(map) {
@@ -65,11 +66,12 @@ angular.module('pokeMap').component('pokeMap', {
           console.log(position.coords);
           $scope.user.lat = position.coords.latitude;
           $scope.user.lon = position.coords.longitude;
+          geocodeAddress();
         }, function(error) {
           switch(error.code) {
             case error.PERMISSION_DENIED:
               if (error.message.indexOf("Only secure origins are allowed") == 0) {
-                tryAPIGeolocation();
+                geocodeAddress();
               }
               else {
                 console.log("User denied the request for Geolocation.");
@@ -96,7 +98,7 @@ angular.module('pokeMap').component('pokeMap', {
       }
       else {
         console.log("Geolocation is not supported by this browser.");
-        tryAPIGeolocation();
+        geocodeAddress();
       }
     }
     var tryAPIGeolocation = function() {
@@ -108,6 +110,19 @@ angular.module('pokeMap').component('pokeMap', {
         $scope.user.lon = coords.longitude;
       }
     };
+    var geocodeAddress = function(){
+      $scope.addressFail = true;
+    }
+    $scope.placeChanged = function() {
+      // console.log(this.getPlace());
+      var place = this.getPlace();
+      if (place.geometry) {
+        var coords = place.geometry.location;
+        $scope.user.lat = coords.lat();
+        $scope.user.lon = coords.lng();
+      }
+    }
+
     getLocation();
 
 
@@ -152,5 +167,8 @@ angular.module('pokeMap').component('pokeMap', {
     }
     if (!$scope.user.name) $scope.showLogin(); 
 
+    $scope.toggleInfo = function(ev){
+      console.log(ev);
+    }
   }
 });
