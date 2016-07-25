@@ -30,6 +30,7 @@ router.post('/api/pokemon', function(req, res) {
   }
   else{
 
+    /*
     require("child_process").exec('cd PokeQuery; python example.py -u ' + req.body.name
                                   + ' -p ' + req.body.password + ' --lat ' + req.body.lat
                                   + ' --lon ' + req.body.lon + ' -st 1',
@@ -46,25 +47,26 @@ router.post('/api/pokemon', function(req, res) {
           res.status(400).send("Error: unknown");
         }
     });
-  }
+    */
 
-
-
-// TODO implement this so we can get some async loading
-/*
-    process = spawn('python', ["../PokeQuery/example.py", 
-                              req.body.username, req.body.password,
-                              req.body.lat, req.body.lon]);
+    process = spawn('python', ["./example.py", 
+                              '-u', req.body.name, '-p', req.body.password,
+                              '--lat', req.body.lat, '--lon', req.body.lon], {cwd: "./PokeQuery"});
     process.stdout.on('data', function (data){
-      console.log(data);
-    // Do something with the data returned from python script
+      console.log('data: ' + data);
+      res.write(data);
+      res.flush();
+    });
+    process.stderr.on('data', function(data){
+      console.log('stderr: ' + data);
     });
     process.on('close', function(closed) {
       console.log("It's closed");
       console.log(closed);
+      res.end();
     });
-    */
 
+  }
 });
 
 module.exports = router;

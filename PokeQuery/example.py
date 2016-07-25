@@ -638,6 +638,8 @@ transform_from_wgs_to_gcj(Location(Fort.Latitude, Fort.Longitude))
             "name": pokename
         }
 
+        print pokemons
+        sys.stdout.flush()
     '''
     with open('data.txt', 'w') as outfile:
         json.dump(pokemons, outfile)
@@ -843,10 +845,4 @@ def get_map():
 if __name__ == '__main__':
     sys.stdout.flush()
     args = get_args()
-    '''
-    args.username = sys.argv[1];
-    args.password = sys.argv[2];
-    args.lat = sys.argv[3];
-    args.lon = sys.argv[4];
-    '''
     main()
