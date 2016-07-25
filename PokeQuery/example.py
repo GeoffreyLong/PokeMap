@@ -638,8 +638,8 @@ transform_from_wgs_to_gcj(Location(Fort.Latitude, Fort.Longitude))
             "name": pokename
         }
 
-        print pokemons
-        sys.stdout.flush()
+        #print pokemons
+        #sys.stdout.flush()
     '''
     with open('data.txt', 'w') as outfile:
         json.dump(pokemons, outfile)

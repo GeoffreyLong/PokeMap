@@ -52,6 +52,7 @@ angular.module('pokeMap').component('pokeMap', {
             newMark.pokemon = poke.name;
             newMark.pokeNum = poke.id;
             newMark.coords = poke.lat + ',' + poke.lng;
+            // newMark.expire = Math.round(poke.disappear_time / 6000000)/100;
             $scope.pokeMarks.push(newMark);
             $scope.isBusy = false;
           }
@@ -180,6 +181,7 @@ angular.module('pokeMap').component('pokeMap', {
     $scope.toggleInfo = function(ev, poke){
       console.log(ev);
       console.log(poke);
+      poke.active = false;
     }
   }
 });

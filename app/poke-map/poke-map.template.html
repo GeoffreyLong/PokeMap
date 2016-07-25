@@ -14,12 +14,12 @@
 
 <ng-map ng-style="{'visibility': pokeMarks.length !== 0 ? 'visible':'hidden'}" center="{{user.lat}}, {{user.lon}}" zoom="16">
   <marker position="{{user.lat}}, {{user.lon}}" title="Current Location"></marker> 
-  <custom-marker ng-repeat="cm in pokeMarks" position="{{cm.coords}}" on-click="toggleInfo($event, cm)">
-    <div> <img ng-src="images/{{cm.pokeNum}}.png"/> </div>
-    <div class="moreInfo">
-      
-    </div>
-  </custom-marker> 
+  <marker ng-repeat="cm in pokeMarks" position="{{cm.coords}}" 
+          on-click="toggleInfo($event, cm)" style="cursor:pointer"
+          icon="{url:'images_small/{{cm.pokeNum}}.png', scaledSize:[32,32]}"
+          title="{{cm.pokemon}}">
+          <!-- title="{{cm.pokemon}}, expires: {{cm.expire}} seconds" -->
+  </marker> 
 </ng-map>
 
 <div  layout="column" layout-align="center center" 

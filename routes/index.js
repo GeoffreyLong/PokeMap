@@ -29,8 +29,6 @@ router.post('/api/pokemon', function(req, res) {
     res.status(400).send("Error: Check your username, password, and coordinates");
   }
   else{
-
-    /*
     require("child_process").exec('cd PokeQuery; python example.py -u ' + req.body.name
                                   + ' -p ' + req.body.password + ' --lat ' + req.body.lat
                                   + ' --lon ' + req.body.lon + ' -st 1',
@@ -47,8 +45,9 @@ router.post('/api/pokemon', function(req, res) {
           res.status(400).send("Error: unknown");
         }
     });
-    */
 
+    // TODO socket this back or something
+    /*
     process = spawn('python', ["./example.py", 
                               '-u', req.body.name, '-p', req.body.password,
                               '--lat', req.body.lat, '--lon', req.body.lon], {cwd: "./PokeQuery"});
@@ -65,7 +64,7 @@ router.post('/api/pokemon', function(req, res) {
       console.log(closed);
       res.end();
     });
-
+    */
   }
 });
 
