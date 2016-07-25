@@ -2,6 +2,9 @@
 <md-toolbar id="topBar" layout="row" layout-align="space-between center" class="md-whiteframe-z2" 
             style="padding:0px; margin-bottom:0px; position:fixed; top: 0px">
   <div class="md-title" style="padding-left: 20px"> PokeFinder </div>
+  <md-button ng-click="refresh()">
+    <md-icon class="material-icons"> refresh </md-icon>
+  </md-button>  
   <div>
     <md-button aria-label="Profile">
       <md-icon class="material-icons" ng-click="showLogin()"> account_circle </md-icon>
@@ -16,4 +19,9 @@
   </custom-marker> 
 </ng-map>
 
-<md-progress-circular ng-hide="pokeMarks.length !== 0 || !isBusy" md-diameter="96" style="position:fixed; top: 30%; left: 46%"></md-progress-circular>
+<div  layout="column" layout-align="center center" 
+      ng-hide="pokeMarks.length !== 0 || !isBusy" 
+      style="position:fixed; top: 30%; width: 100%"> 
+  <md-progress-circular md-diameter="96" ></md-progress-circular>
+  Loading may take up to 30 seconds.
+</div>
