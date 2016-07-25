@@ -3,8 +3,18 @@ angular.module('pokeMap').component('pokeMap', {
   controller: function PokeMapController($scope, $http, $interval,
                                           $mdMedia, $mdDialog, NgMap){
     $scope.pokeMarks = [];
-    $scope.user = {};
     $scope.isBusy = false;
+    $scope.user = {};
+
+    if (localStorage && localStorage.user){
+      var storedUser = JSON.parse(localStorage.user || {});
+      console.log(storedUser);
+      if (storedUser) {
+        $scope.user.name = storedUser.name;
+        $scope.user.lat = storedUser.lat;
+        $scope.user.lon = storedUser.lon;
+      }
+    }
 
     // Callback to set the map after map initializes
     NgMap.getMap().then(function(map) {
@@ -130,9 +140,13 @@ angular.module('pokeMap').component('pokeMap', {
       .then(function(answer) {
         $scope.user = {};
         $scope.user.name = answer.name;
-        $scope.user.password = answer.password;
         $scope.user.lat = answer.lat;
         $scope.user.lon = answer.lon;
+        localStorage.user = JSON.stringify($scope.user);
+        console.log(localStorage);
+
+        // Not saving password
+        $scope.user.password = answer.password;
         $scope.refresh();
       }, function() {
         // TODO errors
@@ -143,7 +157,7 @@ angular.module('pokeMap').component('pokeMap', {
         $scope.customFullscreen = (wantsFullScreen === true);
       });
     }
-    if (!$scope.user.name) $scope.showLogin(); 
+    if (!$scope.user.password) $scope.showLogin(); 
 
   }
 });
