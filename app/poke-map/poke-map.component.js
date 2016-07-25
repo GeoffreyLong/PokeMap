@@ -19,6 +19,7 @@ angular.module('pokeMap').component('pokeMap', {
 
     $scope.query = function(){
       $scope.isBusy = true;
+      $scope.error = "";
       var data = {};
       data.lat = $scope.user.lat;
       data.lon = $scope.user.lon;
