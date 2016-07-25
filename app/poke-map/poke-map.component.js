@@ -93,7 +93,7 @@ angular.module('pokeMap').component('pokeMap', {
       }
     }
     var tryAPIGeolocation = function() {
-      jQuery.post( "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAQ8ids03AVpJ8EDcom5Qdu2cQOCdkC9VY", function(success) {
+      jQuery.post( "http://maps.google.com/maps/api/js?key=AIzaSyAQ8ids03AVpJ8EDcom5Qdu2cQOCdkC9VY&libraries=geolocate", function(success) {
         console.log(position.coords);
         $scope.user.lat = position.coords.latitude;
         $scope.user.lon = position.coords.longitude;
