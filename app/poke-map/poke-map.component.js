@@ -13,6 +13,7 @@ angular.module('pokeMap').component('pokeMap', {
 
     $scope.refresh = function(){
       $scope.pokeMarks = [];
+      getLocation();
       $scope.query();
     }
 
@@ -47,6 +48,7 @@ angular.module('pokeMap').component('pokeMap', {
     }
 
 
+
     var getLocation = function() {
       // TODO should this be in a promise?
       // NOTE this might not even need to be a service
@@ -59,7 +61,12 @@ angular.module('pokeMap').component('pokeMap', {
         }, function(error) {
           switch(error.code) {
             case error.PERMISSION_DENIED:
-              console.log("User denied the request for Geolocation.");
+              if (error.message.indexOf("Only secure origins are allowed") == 0) {
+                tryAPIGeolocation();
+              }
+              else {
+                console.log("User denied the request for Geolocation.");
+              }
               break;
             case error.POSITION_UNAVAILABLE:
               console.log("Location information is unavailable.");
@@ -78,12 +85,23 @@ angular.module('pokeMap').component('pokeMap', {
           //    This is the best case for having it in a promise
           //    If this issue does arise
 
-        });
+        }, {enableHighAccuracy: true});
       }
       else {
         console.log("Geolocation is not supported by this browser.");
+        tryAPIGeolocation();
       }
     }
+    var tryAPIGeolocation = function() {
+      jQuery.post( "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCmJgMgZ7_ndppicybFXEkzN-dlD40JQUs", function(success) {
+        console.log(position.coords);
+        $scope.user.lat = position.coords.latitude;
+        $scope.user.lon = position.coords.longitude;
+      })
+      .fail(function(err) {
+        console.log("API Geolocation error: "+err);
+      });
+    };
     getLocation();
 
 
