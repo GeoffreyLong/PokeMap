@@ -93,16 +93,16 @@ angular.module('pokeMap').component('pokeMap', {
       }
     }
     var tryAPIGeolocation = function() {
-      jQuery.post( "http://maps.google.com/maps/api/js?key=AIzaSyAQ8ids03AVpJ8EDcom5Qdu2cQOCdkC9VY&libraries=geolocate", function(success) {
-        console.log(position.coords);
-        $scope.user.lat = position.coords.latitude;
-        $scope.user.lon = position.coords.longitude;
-      })
-      .fail(function(err) {
-        console.log("API Geolocation error: "+err);
-      });
+      // Horribly innaccurate fallback
+      if ((typeof google == 'object') && google.loader && google.loader.ClientLocation) {
+        var coords = google.loader.ClientLocation; 
+        console.log("API " + coords);
+        $scope.user.lat = coords.latitude;
+        $scope.user.lon = coords.longitude;
+      }
     };
     getLocation();
+
 
 
     $scope.showLogin = function() {
