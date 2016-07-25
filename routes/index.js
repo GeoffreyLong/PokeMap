@@ -5,6 +5,10 @@ var process = null;
 
 /* GET home page. */
 router.post('/api/pokemon', function(req, res) {
+  console.log(req.session);
+  if (!req.session.user){
+    req.session.user = req.body;
+  }
   require("child_process").exec('cd PokeQuery; python example.py -u ' + req.body.username
                                 + ' -p ' + req.body.password + ' --lat ' + req.body.lat
                                 + ' --lon ' + req.body.lon + ' -st 1',
