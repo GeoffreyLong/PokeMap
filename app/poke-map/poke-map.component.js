@@ -3,18 +3,8 @@ angular.module('pokeMap').component('pokeMap', {
   controller: function PokeMapController($scope, $http, $interval,
                                           $mdMedia, $mdDialog, NgMap){
     $scope.pokeMarks = [];
-    $scope.isBusy = false;
     $scope.user = {};
-
-    if (localStorage && localStorage.user){
-      var storedUser = JSON.parse(localStorage.user || {});
-      console.log(storedUser);
-      if (storedUser) {
-        $scope.user.name = storedUser.name;
-        $scope.user.lat = storedUser.lat;
-        $scope.user.lon = storedUser.lon;
-      }
-    }
+    $scope.isBusy = false;
 
     // Callback to set the map after map initializes
     NgMap.getMap().then(function(map) {
@@ -40,20 +30,26 @@ angular.module('pokeMap').component('pokeMap', {
         url: 'api/pokemon',
         data: data
       }).then(function(data) {
-        console.log(data);
-        // Populate the map!
-        
-        for (poke in data.data) {
-          var poke = data.data[poke];
-          var newMark = {};
-          newMark.pokemon = poke.name;
-          newMark.pokeNum = poke.id;
-          newMark.coords = poke.lat + ',' + poke.lng;
-          $scope.pokeMarks.push(newMark);
-          $scope.isBusy = false;
+        if (data.status === 200) {
+          console.log(data);
+          // Populate the map!
+          for (poke in data.data) {
+            var poke = data.data[poke];
+            var newMark = {};
+            newMark.pokemon = poke.name;
+            newMark.pokeNum = poke.id;
+            newMark.coords = poke.lat + ',' + poke.lng;
+            $scope.pokeMarks.push(newMark);
+            $scope.isBusy = false;
+          }
+        }
+        else {
+          $scope.error = "Error!"
         }
       }, function(err) {
         console.log(err);
+        $scope.isBusy = false;
+        $scope.error = err.data;
       });
     }
 
@@ -140,13 +136,9 @@ angular.module('pokeMap').component('pokeMap', {
       .then(function(answer) {
         $scope.user = {};
         $scope.user.name = answer.name;
+        $scope.user.password = answer.password;
         $scope.user.lat = answer.lat;
         $scope.user.lon = answer.lon;
-        localStorage.user = JSON.stringify($scope.user);
-        console.log(localStorage);
-
-        // Not saving password
-        $scope.user.password = answer.password;
         $scope.refresh();
       }, function() {
         // TODO errors
@@ -157,7 +149,7 @@ angular.module('pokeMap').component('pokeMap', {
         $scope.customFullscreen = (wantsFullScreen === true);
       });
     }
-    if (!$scope.user.password) $scope.showLogin(); 
+    if (!$scope.user.name) $scope.showLogin(); 
 
   }
 });

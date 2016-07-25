@@ -16,6 +16,9 @@
   <marker position="{{user.lat}}, {{user.lon}}" title="Current Location"></marker> 
   <custom-marker ng-repeat="cm in pokeMarks" position="{{cm.coords}}">
     <div> <img ng-src="images/{{cm.pokeNum}}.png"/> </div>
+    <div class="moreInfo">
+
+    </div>
   </custom-marker> 
 </ng-map>
 
@@ -24,4 +27,10 @@
       style="position:fixed; top: 30%; width: 100%"> 
   <md-progress-circular md-diameter="96" ></md-progress-circular>
   Loading may take up to 30 seconds.
+</div>
+
+<div  layout="column" layout-align="center center" 
+      ng-show="error" 
+      style="position:fixed; top: 30%; width: 100%"> 
+    {{error}}
 </div>

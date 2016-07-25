@@ -9,17 +9,36 @@ router.post('/api/pokemon', function(req, res) {
   if (!req.session.user){
     req.session.user = req.body;
   }
-  require("child_process").exec('cd PokeQuery; python example.py -u ' + req.body.username
-                                + ' -p ' + req.body.password + ' --lat ' + req.body.lat
-                                + ' --lon ' + req.body.lon + ' -st 1',
-    function (error, stdout, stderr) {
-      console.log('stdout: ' + stdout);
+
+  var name = req.body.username;
+  var password = req.body.password;
+  var lat = req.body.lat;
+  var lon = req.body.lon;
+
+  if (!name || !password || !lat || !lon){
+    // TODO error handling here
+    console.log("something not defined"); 
+    res.status(400).send("Error: Check your username, password, and coordinates");
+  }
+  else{
+
+    require("child_process").exec('cd PokeQuery; python example.py -u ' + req.body.username
+                                  + ' -p ' + req.body.password + ' --lat ' + req.body.lat
+                                  + ' --lon ' + req.body.lon + ' -st 1',
+      function (error, stdout, stderr) {
+        console.log('stdout: ' + stdout);
       
-      res.status(200).send(JSON.parse(stdout));
-      if (error !== null) {
-        console.log('exec error: ' + error);
-      }
-  });
+        if (stdout !== ""){
+          res.status(200).send(JSON.parse(stdout));
+        }
+        else if (stderr) {
+          res.status(400).send("Error: Check your username, password, and coordinates");
+        }
+        else {
+          res.status(400).send("Error: unknown");
+        }
+    });
+  }
 
 
 
