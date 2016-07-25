@@ -7,6 +7,21 @@ angular.module('pokeMap').component('pokeMap', {
     $scope.isBusy = false;
     $scope.addressFail = false;
 
+
+    $http({
+      method: 'GET',
+      url: 'api/user',
+    }).then(function(data) {
+      if (data.status === 200) {
+        $scope.user = data.data;
+      }
+      $scope.showLogin(); 
+    }, function(err) {
+      // TODO ?
+      $scope.showLogin(); 
+    });
+
+
     // Callback to set the map after map initializes
     NgMap.getMap().then(function(map) {
       $scope.map = map;
@@ -21,11 +36,7 @@ angular.module('pokeMap').component('pokeMap', {
     $scope.query = function(){
       $scope.isBusy = true;
       $scope.error = "";
-      var data = {};
-      data.lat = $scope.user.lat;
-      data.lon = $scope.user.lon;
-      data.username = $scope.user.name;
-      data.password = $scope.user.password;
+      var data = $scope.user;
 
       $http({
         method: 'POST',
@@ -165,10 +176,10 @@ angular.module('pokeMap').component('pokeMap', {
         $scope.customFullscreen = (wantsFullScreen === true);
       });
     }
-    if (!$scope.user.name) $scope.showLogin(); 
 
-    $scope.toggleInfo = function(ev){
+    $scope.toggleInfo = function(ev, poke){
       console.log(ev);
+      console.log(poke);
     }
   }
 });

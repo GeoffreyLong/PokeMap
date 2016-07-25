@@ -3,14 +3,22 @@ var router = express.Router();
 var spawn = require("child_process").spawn;
 var process = null;
 
+router.get('/api/user', function(req, res) {
+  if (req.session && req.session.user) {
+    res.status(200).send(req.session.user);
+  }
+  else {
+    res.status(400).send("");
+  }
+});
+
 /* GET home page. */
 router.post('/api/pokemon', function(req, res) {
-  console.log(req.session);
-  if (!req.session.user){
+  if (req.session && !req.session.user){
     req.session.user = req.body;
   }
 
-  var name = req.body.username;
+  var name = req.body.name;
   var password = req.body.password;
   var lat = req.body.lat;
   var lon = req.body.lon;
@@ -22,7 +30,7 @@ router.post('/api/pokemon', function(req, res) {
   }
   else{
 
-    require("child_process").exec('cd PokeQuery; python example.py -u ' + req.body.username
+    require("child_process").exec('cd PokeQuery; python example.py -u ' + req.body.name
                                   + ' -p ' + req.body.password + ' --lat ' + req.body.lat
                                   + ' --lon ' + req.body.lon + ' -st 1',
       function (error, stdout, stderr) {
@@ -42,6 +50,7 @@ router.post('/api/pokemon', function(req, res) {
 
 
 
+// TODO implement this so we can get some async loading
 /*
     process = spawn('python', ["../PokeQuery/example.py", 
                               req.body.username, req.body.password,

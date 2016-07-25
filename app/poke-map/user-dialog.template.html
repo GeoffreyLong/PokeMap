@@ -1,8 +1,11 @@
 <md-dialog id="User Information" ng-cloak>
-  <md-toolbar>
+  <md-toolbar layout="row" layout-align="space-between center">
     <div class="md-toolbar-tools">
       <h2>User Information</h2>
     </div>
+    <md-button class="md-icon-button" ng-click="cancel()">
+      <md-icon class="material-icons"> close </md-icon>
+    </md-button>
   </md-toolbar>
   <md-dialog-content>
     <div id="steps" style="padding: 20px">
@@ -11,7 +14,9 @@
         <div flex style="padding-left: 5px; max-width: 400px">
           Get a pokemon club account 
           I recommend a throw-away account
-          with a dummy password since I put minimal security in this app
+          with a dummy password 
+          <br>
+        {{addressFail}}
         </div>
       </div>
       <div layout="row">
@@ -41,7 +46,7 @@
             <input  type="password" name="userPassword" ng-model="user.password" />
           </md-input-container>
         </div>
-        <div>
+        <div ng-if="!addressFail">
           <md-input-container flex style="margin:0">
             <label class="md-title"> Latitude </label>
             <input  type="text" name="latitude" ng-model="user.lat" />
@@ -51,6 +56,10 @@
             <input  type="text" name="longitude" ng-model="user.lon" />
           </md-input-container>
         </div>
+        <md-input-container ng-if="addressFail" class="md-block" style="margin:0">
+          <input  id="addressEdit" places-auto-complete types="['geocode']" ng-model="user.address" 
+                  on-place-changed="placeChanged()" name="address"/>
+        </md-input-container>
       </form>
     </div>
   </md-dialog-content>
